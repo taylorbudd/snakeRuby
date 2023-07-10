@@ -57,6 +57,10 @@ class Snake
         end
     end
 
+    def hit_itself?
+        !@positions.uniq.length == @positions.length
+    end
+
     def x
         head[0]
     end
@@ -84,6 +88,7 @@ class Game
         @score = 0
         @food_x = rand(GRID_WIDTH)
         @food_y = rand(GRID_HEIGHT)
+        @finished = false
     end
 
     def draw
@@ -92,7 +97,6 @@ class Game
     end
 
     def snake_hit_food?(x,y)
-        puts "This is the food coords: #{@food_x}, #{@food_y}"
         @food_x == x && @food_y == y
     end
 
@@ -100,6 +104,10 @@ class Game
         @score += 1
         @food_x = rand(GRID_WIDTH)
         @food_y = rand(GRID_HEIGHT)
+    end
+
+    def finish
+        @finished = true
     end
 end
 
@@ -114,8 +122,12 @@ update do
     game.draw
 
     if game.snake_hit_food?(snake.x, snake.y)
-        puts "This is the snake coords: #{snake.x}, #{snake.y}"
         game.record_hit
+        snake.grow
+    end
+
+    if snake.hit_itself?
+        game.finish
     end
 end
 
