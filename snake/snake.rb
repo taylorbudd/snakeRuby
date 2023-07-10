@@ -18,7 +18,7 @@ class Snake
 
     def draw
         @positions.each do |pos|
-            Square.new(x: pos[0] * GRID_SIZE, y: pos[1] * GRID_SIZE - 1, size: GRID_SIZE - 1, color: 'white')
+            Square.new(x: pos[0] * GRID_SIZE, y: pos[1] * GRID_SIZE, size: GRID_SIZE - 1, color: 'white')
         end
 
     end
@@ -56,13 +56,29 @@ class Snake
     end
 end
 
+class Game
+
+    def initialize
+        @score = 0
+        @food_x = rand(GRID_WIDTH)
+        @food_y = rand(GRID_HEIGHT)
+    end
+
+    def draw
+        Square.new(x: @food_x * GRID_SIZE, y: @food_y * GRID_SIZE, size: GRID_SIZE, color: 'navy')
+        Text.new("Score: #{@score}", color: 'brown', x: 10, y: 10, size: 25)
+    end
+
+end
+
 snake = Snake.new
-snake.draw
+game = Game.new
 
 update do
     clear
     snake.move
     snake.draw
+    game.draw
 end
 
 on :key_down do |event|
