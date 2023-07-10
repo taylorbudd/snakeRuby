@@ -58,7 +58,7 @@ class Snake
     end
 
     def hit_itself?
-        !@positions.uniq.length == @positions.length
+        @positions.uniq.length != @positions.length
     end
 
     def x
@@ -92,8 +92,10 @@ class Game
     end
 
     def draw
-        Square.new(x: @food_x * GRID_SIZE, y: @food_y * GRID_SIZE, size: GRID_SIZE, color: 'navy')
-        Text.new("Score: #{@score}", color: 'brown', x: 10, y: 10, size: 25)
+        unless finished?
+            Square.new(x: @food_x * GRID_SIZE, y: @food_y * GRID_SIZE, size: GRID_SIZE, color: 'navy')
+        end
+        Text.new(text_message, color: 'brown', x: 10, y: 10, size: 25)
     end
 
     def snake_hit_food?(x,y)
@@ -109,6 +111,20 @@ class Game
     def finish
         @finished = true
     end
+
+    def finished?
+        @finished
+    end
+
+    private
+
+    def text_message
+        if finished?
+            "Game Over! Your final score is: #{@score}. Press 'R' to restart!"
+        else
+            "Score: #{@score}"
+        end
+    end
 end
 
 snake = Snake.new
@@ -116,8 +132,11 @@ game = Game.new
 
 update do
     clear
+    
+    unless game.finished?
+        snake.move
+    end
 
-    snake.move
     snake.draw
     game.draw
 
@@ -136,6 +155,9 @@ on :key_down do |event|
         if snake.can_change_direction_to?(event.key)
             snake.direction = event.key
         end
+    elsif event.key == 'r'
+        snake = Snake.new
+        game = Game.new
     end
 end
 
