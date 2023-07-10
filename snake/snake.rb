@@ -4,6 +4,8 @@ set background: 'olive'
 set fps_cap: 20
 
 GRID_SIZE = 20
+GRID_HEIGHT = Window.height / GRID_SIZE
+GRID_WIDTH = Window.width / GRID_SIZE
 
 class Snake
 
@@ -26,13 +28,13 @@ class Snake
 
         case @direction
         when 'down'
-            @positions.push([head[0], head[1] + 1])
+            @positions.push(new_coords(head[0], head[1] + 1))
         when 'up'
-            @positions.push([head[0], head[1] - 1])
+            @positions.push(new_coords(head[0], head[1] - 1))
         when 'left'
-            @positions.push([head[0] - 1, head[1]])
+            @positions.push(new_coords(head[0] - 1, head[1]))
         when 'right'
-            @positions.push([head[0] + 1, head[1]])
+            @positions.push(new_coords(head[0] + 1, head[1]))
         end
     end
 
@@ -43,6 +45,10 @@ class Snake
         when 'left' then new_direction != 'right'
         when 'right' then new_direction != 'left'
         end
+    end
+
+    def new_coords(x,y)
+        [x % GRID_WIDTH, y % GRID_HEIGHT]
     end
 
     def head
